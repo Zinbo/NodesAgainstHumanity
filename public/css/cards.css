@@ -1,0 +1,37 @@
+/* columns of same height styles */
+.container {
+    display:table;
+    padding-left:0px;
+    padding-right:0px;
+}
+.row-xs-height {
+    display:table-row;
+}
+.col-xs-height {
+    display:table-cell;
+    float:none;
+}
+
+.card{
+	font-family: "Helvetica", Times, serif;
+	font-weight: bold;
+	font-size: 14px;
+	border-style: solid;
+    border-width: 5px;
+}
+
+.black-card {
+	background-color: black;
+	color: white;
+	border-color: white;
+}
+
+.white-card {
+	background-color: white;
+	color: black;
+	border-color: black;
+}
+
+.odd-expac{
+	background-color: #eee;
+}
