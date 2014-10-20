@@ -1,6 +1,15 @@
  var Card = require('./models/card');
  var Expansion = require('./models/expansion');
  
+ /*
+ //Can use to clear the database if needed
+ Card.remove({}, function(err) {
+ });
+ 
+ Expansion.remove({}, function(err) {
+ });
+ */
+ 
  module.exports = function(app) {
 
         // server routes ===========================================================
@@ -18,24 +27,35 @@
 		
         // route to handle creating goes here (app.post)
         app.post('/api/cards', function(req, res) {
-
 			// create a card, information comes from AJAX request from Angular
-			Card.create({
-				description : req.body.description,
+			
+			var card = new Card({description : req.body.description,
 				isWhite : req.body.isWhite,
 				noOfResponses : req.body.noOfResponses,
-				expansion : req.body.expansion
-			}, function(err, card) {
-				if (err)
-					res.send(err);
-
-				// get and return all the cards after you create another
-				Card.find(function(err, cards) {
-					if (err)
-						res.send(err)
-					res.json(cards);
+				expansion : req.body.expansion});
+			
+			
+			card.save(function (err) {
+				if(err) {
+					return handleError(err);
+				}
+			});
+			
+			//Update expansion to include card
+			Expansion.findById(req.body.expansion, function(err, expansion) {
+				if(err) {
+					return handleError(err);
+				}
+				
+				expansion.cards.push(card.id);
+				
+				expansion.save(function(err) {
+					if(err) {
+						return handleError(err);
+					}
 				});
 			});
+			
 		});
 		
 		// route to handle delete goes here (app.delete)
@@ -58,7 +78,6 @@
 		
 		app.get('/api/expansions', function(req, res) {
             // use mongoose to get all cards in the database
-			console.log("getting all expansions!");
             Expansion.find(function(err, expansions) {
 
                 // if there is an error retrieving, send the error. 
@@ -66,15 +85,12 @@
                 if (err)
                     res.send(err);
 					
-				console.log("returning " + expansions + " expansions");
                 res.json(expansions); // return all cards in JSON format
             });
         });
 		
 		app.post('/api/expansions', function(req, res) {
 
-			console.log("Caught post to expansions");
-			console.log("received request " + req.body.name);
 			// create a card, information comes from AJAX request from Angular
 			Expansion.create({
 				name : req.body.name,
@@ -84,7 +100,6 @@
 					res.send(err);
 
 					
-				console.log("Created expansion object!");
 				// get and return all the cards after you create another
 				Expansion.find(function(err, expansions) {
 					if (err)
@@ -97,7 +112,6 @@
         // frontend routes =========================================================
         // route to handle all angular requests
         app.get('*', function(req, res) {
-			console.log("Going to index page!");
             res.sendfile('./public/views/index.html'); // load our public/index.html file
         });
 
