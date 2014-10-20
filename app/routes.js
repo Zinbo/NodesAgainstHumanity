@@ -47,7 +47,12 @@
 					return handleError(err);
 				}
 				
-				expansion.cards.push(card.id);
+				if(card.isWhite){
+					expansion.whiteCards.push(card.id);
+				} 
+				else {
+					expansion.blackCards.push(card.id);
+				}
 				
 				expansion.save(function(err) {
 					if(err) {
@@ -56,6 +61,16 @@
 				});
 			});
 			
+		});
+		
+		app.get('/api/card/:card_id', function(req, res) {
+			Card.findById(req.params.card_id, function(err, card) {
+				if(err) {
+					return handleError(err);
+				}
+				
+				res.json(card);
+			});
 		});
 		
 		// route to handle delete goes here (app.delete)

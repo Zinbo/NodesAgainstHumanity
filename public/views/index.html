@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		
-		<!-- Expansion Modal -->
+		<!-- Card Modal -->
 		<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -74,7 +74,7 @@
 					<form name="expansion-form" ng-submit="createCard()">
 						<div class="modal-body">
 							Card: <input type="text" class="form-control input-lg text-center card-validation-needed"  ng-model="formCardData.description" required />
-							Is White?: <input type="checkbox" class="form-control input-lg text-center" ng-model="formCardData.isWhite" />
+							Is White?: <input id="is-white-checkbox" type="checkbox" class="form-control input-lg text-center" />
 							Number of Responses Needed: <input type="number" class="form-control input-lg text-center card-validation-needed" ng-model="formCardData.noOfResponses" required />
 							Expansion: 
 							
@@ -98,163 +98,21 @@
 		</div>
 	</div>
 	
-	<div class = "container">
-		<h1>Expansion 1</h1>
+	<div class = "container" ng-repeat="expansion in expansions" styling-directive>
+		<h1>{{ expansion.name }}</h1>
 		<h2>Black</h2>
 		<div class="container container-xs-height">
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card black-card">
-					Who was phone?
+			<div class="row row-xs-height" ng-repeat="arrayOfBlackCards in expansion.blackCards" >
+				<div ng-repeat="blackCard in arrayOfBlackCards" id={{blackCard.id}} class="col-xs-2 col-xs-height card black-card" >
+					{{ blackCard.description }} 
 				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 3
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 4
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 5
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 6
-				</div>	
-			</div>
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 1
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 3
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 4
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 5
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 6
-				</div>	
 			</div>
 		</div>
 		<h2>White</h2>
 		<div class="container container-xs-height">
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card white-card">
-					IT WAS PHONE
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 3
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 4
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 5
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 6
-				</div>	
-			</div>
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 1
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 3
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div class = "container odd-expac">
-		<h1>Expansion 2</h1>
-		<h2>Black</h2>
-		<div class="container container-xs-height">
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card black-card">
-					Who was phone?
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 3
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 4
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 5
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 6
-				</div>	
-			</div>
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 1
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 3
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 4
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 5
-				</div>
-				<div class="col-xs-2 col-xs-height card black-card">
-					Placeholder 6
-				</div>	
-			</div>
-		</div>
-		<h2>White</h2>
-		<div class="container container-xs-height">
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card white-card">
-					IT WAS PHONE
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 3
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 4
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 5
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 6
-				</div>	
-			</div>
-			<div class="row row-xs-height">
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 1
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 2
-				</div>
-				<div class="col-xs-2 col-xs-height card white-card">
-					Placeholder 3
+			<div class="row row-xs-height" ng-repeat="arrayOfWhiteCards in expansion.whiteCards">
+				<div ng-repeat="whiteCard in arrayOfWhiteCards" id={{whiteCard.id}} class="col-xs-2 col-xs-height card white-card" >
+					{{ whiteCard.description }} 
 				</div>
 			</div>
 		</div>

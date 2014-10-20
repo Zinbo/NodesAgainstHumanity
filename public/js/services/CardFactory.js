@@ -5,6 +5,10 @@ angular.module('DeckBuilderApp').factory('CardFactory', ['$http', function($http
 			return $http.get('/api/cards');
 		},
 		
+		get : function(id) {
+			return $http.get('/api/cards/' + id);
+		},
+		
 		create : function(cardData) {
 			return $http.post('/api/cards', cardData);
 		},
