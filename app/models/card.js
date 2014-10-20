@@ -10,11 +10,5 @@ var cardSchema = Schema({
 	expansion		: { type: Schema.Types.ObjectId, ref: 'Expansion' }
 });
 
-var expansionSchema = Schema({
-	name : String,
-	cards : [{ type: Schema.Types.ObjectId, ref: 'Card' }]
-});
-
 //Adding these to exports exposes them to other js files
-exports.mongoose.model('Card', cardSchema);
-exports.mongoose.model('Expansion', expansionSchema);
+module.exports = mongoose.model('Card', cardSchema);

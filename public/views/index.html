@@ -15,12 +15,14 @@
     <script src="libs/angular-route/angular-route.min.js"></script>
 	<script src="libs/angular-route/angular-route.min.js"></script>
 	<script src="libs/jquery/dist/jquery.min.js"></script>
+	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
 	
+	<script src="js/app.js"></script>
+	<script src="js/services/CardFactory.js"></script>
+	<script src="js/services/ExpansionFactory.js"></script>
 	<script src="js/controllers/MainCtrl.js"></script>
-	<script src="js/services/CardService.js"></script>
     <script src="js/appRoutes.js"></script>
-    <script src="js/app.js"></script>
-	<script src="js/cards.js"></script>
+    <script src="js/cards.js"></script>
 	
 </head>
 <body ng-app="DeckBuilderApp" ng-controller="MainController">
@@ -29,6 +31,73 @@
 		<h1>Vanguard Against Humanity - Deck Builder</h1>
 		<h2>{{ tagline }}</h2>
 	</div>
+	
+	<div class="container">
+		<!-- Button trigger modal -->
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#expansionModal">
+		  Add Expansion...
+		</button>
+		
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#cardModal" style="float: right;">
+		  Add Card...
+		</button>
+
+		<!-- Expansion Modal -->
+		<div class="modal fade" id="expansionModal" tabindex="-1" role="dialog" aria-labelledby="expansionModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="expansionModalLabel">Modal title</h4>
+					</div>
+					<form>
+						<div class="modal-body">										
+							Expansion Name: <input type="text" class="form-control input-lg text-center" placeholder="MCM Edition" ng-model="formExpansionData.name">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createExpansion()">Create Expansion</button>
+						</div>
+					</form>	
+				</div>
+			</div>
+		</div>
+		
+		<!-- Expansion Modal -->
+		<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="cardModalLabel">Modal title</h4>
+					</div>
+					<form name="expansion-form" ng-submit="createCard()">
+						<div class="modal-body">
+							Card: <input type="text" class="form-control input-lg text-center card-validation-needed"  ng-model="formCardData.description" required />
+							Is White?: <input type="checkbox" class="form-control input-lg text-center" ng-model="formCardData.isWhite" />
+							Number of Responses Needed: <input type="number" class="form-control input-lg text-center card-validation-needed" ng-model="formCardData.noOfResponses" required />
+							Expansion: 
+							
+							<div class="btn-group btn-input clearfix">
+								<button type="button" class="btn btn-default dropdown-toggle form-control" data-toggle="dropdown">
+									<span data-bind="label">Select Expansion</span> <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li class="expansion_option" ng-repeat="expansion in expansions" active="false" id={{expansion._id}}><a href="#">{{expansion.name}}</a></li>
+								</ul>
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button id="create-card-button" type="submit" class="btn btn-primary" >Create Card</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class = "container">
 		<h1>Expansion 1</h1>
 		<h2>Black</h2>
