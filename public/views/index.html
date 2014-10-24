@@ -63,6 +63,28 @@
 			</div>
 		</div>
 		
+		<!-- Update Expansion Modal -->
+		<div class="modal fade" id="expansionEditModal" tabindex="-1" role="dialog" aria-labelledby="updateExpansionModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="updateExpansionModalLabel">Modal title</h4>
+					</div>
+					<form>
+						<div class="modal-body">										
+							Expansion Name: <input id="edit-expansion-name" type="text" class="form-control input-lg text-center" ng-model="formUpdateExpansionData.name">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editExpansion()">Update Expansion</button>
+							<button type="button" class="btn btn-danger" ng-click="deleteExpansion()" >Delete Expansion</button>
+						</div>
+					</form>	
+				</div>
+			</div>
+		</div>
+		
 		<!-- Card Modal -->
 		<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -74,11 +96,11 @@
 					<form name="expansion-form" ng-submit="createCard()">
 						<div class="modal-body">
 							Card: <input type="text" class="form-control input-lg text-center card-validation-needed"  ng-model="formCardData.description" required />
-							Is White?: <input id="is-white-checkbox" type="checkbox" class="form-control input-lg text-center" />
-							Number of Responses Needed: <input type="number" class="form-control input-lg text-center card-validation-needed" ng-model="formCardData.noOfResponses" required />
+							Is White?: <input id="is-white-checkbox" type="checkbox" class="is-white-checkbox form-control input-lg text-center" />
+							Number of Responses Needed: <input type="number" class="no-of-responses form-control input-lg text-center card-validation-needed" ng-model="formCardData.noOfResponses" required />
 							Expansion: 
 							
-							<div class="btn-group btn-input clearfix">
+							<div class="expansion-dropdown btn-group btn-input clearfix">
 								<button type="button" class="btn btn-default dropdown-toggle form-control" data-toggle="dropdown">
 									<span data-bind="label">Select Expansion</span> <span class="caret"></span>
 								</button>
@@ -98,20 +120,54 @@
 		</div>
 	</div>
 	
+	<!-- Edit Card Modal -->
+		<div class="modal fade" id="cardEditModal" tabindex="-1" role="dialog" aria-labelledby="cardEditModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="cardEditModalLabel">Modal title</h4>
+					</div>
+					<form name="expansion-form" ng-submit="editCard()">
+						<div class="modal-body">
+							Card: <input id="edit-card-description" type="text" class="form-control input-lg text-center card-validation-needed"  ng-model="formEditCardData.description" required />
+							Is White?: <input id="is-white-checkbox-edit" type="checkbox" class="is-white-checkbox form-control input-lg text-center" />
+							Number of Responses Needed: <input id="edit-card-responses" type="number" class="no-of-responses form-control input-lg text-center card-validation-needed" ng-model="formEditCardData.noOfResponses" required />
+							Expansion: 
+							
+							<div class="expansion-dropdown btn-group btn-input clearfix">
+								<button type="button" class="btn btn-default dropdown-toggle form-control" data-toggle="dropdown">
+									<span data-bind="label">Select Expansion</span> <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li class="edit_expansion_option" ng-repeat="expansion in expansions" active="false" id="editexpansion_{{expansion._id}}"><a href="#">{{expansion.name}}</a></li>
+								</ul>
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button id="update-card-button" type="submit" class="btn btn-primary" >Update Card</button>
+							<button id="delete-card-button" type="button" class="btn btn-danger" ng-click="deleteCard()" >Delete Card</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class = "container" ng-repeat="expansion in expansions" styling-directive>
-		<h1>{{ expansion.name }}</h1>
-		<h2>Black</h2>
+		<h1 id="expansion-header" expansion-id={{expansion._id}} ng-click="OpenEditExpansionDialog(expansion._id)">{{ expansion.name }}</h1>
 		<div class="container container-xs-height">
 			<div class="row row-xs-height" ng-repeat="arrayOfBlackCards in expansion.blackCards" >
-				<div ng-repeat="blackCard in arrayOfBlackCards" id={{blackCard.id}} class="col-xs-2 col-xs-height card black-card" >
+				<div ng-repeat="blackCard in arrayOfBlackCards" id={{blackCard.id}} ng-click="OpenEditCardDialog(blackCard.id)" class="col-xs-2 col-xs-height card black-card" >
 					{{ blackCard.description }} 
 				</div>
 			</div>
 		</div>
-		<h2>White</h2>
 		<div class="container container-xs-height">
 			<div class="row row-xs-height" ng-repeat="arrayOfWhiteCards in expansion.whiteCards">
-				<div ng-repeat="whiteCard in arrayOfWhiteCards" id={{whiteCard.id}} class="col-xs-2 col-xs-height card white-card" >
+				<div ng-repeat="whiteCard in arrayOfWhiteCards" id={{whiteCard.id}} ng-click="OpenEditCardDialog(whiteCard.id)" class="col-xs-2 col-xs-height card white-card" >
 					{{ whiteCard.description }} 
 				</div>
 			</div>

@@ -21,21 +21,4 @@ $( document ).ready( function()
 		return false;
 	});
 	
-	$('#create-card-button').click(function() {
-		//Need to do self-validation as I can't figure out how to tell if a form is valid or not
-		//from javascript, and I only want the modal to go away if the form is valid
-		var formIsValid = true;
-		$(".card-validation-needed").each(function(){
-			if($( this ).val() == "") {
-				formIsValid = false;
-				//Why the fuck does return not return you out of the method, GOD JAVASCRIPT
-				return false;
-			}
-		});
-		
-		if(formIsValid)
-		{
-			$('#cardModal').modal('hide');
-		}
-	});	
 });

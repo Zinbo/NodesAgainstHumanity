@@ -6,7 +6,7 @@ angular.module('DeckBuilderApp').factory('CardFactory', ['$http', function($http
 		},
 		
 		get : function(id) {
-			return $http.get('/api/cards/' + id);
+			return $http.get('/api/card/' + id);
 		},
 		
 		create : function(cardData) {
@@ -18,7 +18,7 @@ angular.module('DeckBuilderApp').factory('CardFactory', ['$http', function($http
 		},
 		
 		delete : function(id) {
-			return $http.delete('/api/cards/' + id);
+			return $http.delete('/api/card/' + id);
 		}
 	}
 }]);
