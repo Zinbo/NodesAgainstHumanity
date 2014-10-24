@@ -125,9 +125,9 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 		});
 	
 	$scope.createExpansion = function() {
-		$http.post('/api/expansions', expansionData)
+		$http.post('/api/expansions', $scope.formExpansionData)
 			.success( function(data) {
-				$scope.formCardData = {}; // clear the form so our user is ready to enter another
+				$scope.formExpansionData = {}; // clear the form so our user is ready to enter another
 				$scope.expansions = data;
 				$scope.formatExpansions();
 			});
@@ -200,6 +200,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 				$scope.formUpdateExpansionData = {};
 				$scope.expansions = data;
 				$scope.formatExpansions();
+				$('#expansionEditModal').modal('hide');
 		});
 	};
 	
