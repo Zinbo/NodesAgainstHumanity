@@ -1,0 +1,1 @@
+HEROKU_POSTGRESQL_BLUE_URL: postgres://rhsskomqqefxxd:C4-LTp1MKm4dZP_xTXxF5rPi9p@ec2-54-83-43-49.compute-1.amazonaws.com:5432/dav46i69jsug65
