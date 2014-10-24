@@ -126,11 +126,11 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 	
 	$scope.createExpansion = function() {
 		$http.post('/api/expansions', expansionData)
-			.success(data) {
+			.success( function(data) {
 				$scope.formCardData = {}; // clear the form so our user is ready to enter another
 				$scope.expansions = data;
 				$scope.formatExpansions();
-			};
+			});
 	};
 	
 	$scope.createCard = function() {
