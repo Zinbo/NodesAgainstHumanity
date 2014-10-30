@@ -3,12 +3,12 @@
  
  
  //Can use to clear the database if needed
- Card.remove({}, function(err) {
+ /*Card.remove({}, function(err) {
  });
  
  Expansion.remove({}, function(err) {
  });
-
+*/
  
  module.exports = function(app) {
 
