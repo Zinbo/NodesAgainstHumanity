@@ -12,6 +12,9 @@ var mongoose = require('mongoose'); 					// mongoose for mongodb
 // config files
 var db = require('./config/db');
 
+console.log(process.env.MONGOLAB_URI);
+console.log(process.env.MONGOHQ_URL)
+
 // set our port
 var port = process.env.PORT || 8080; 
 

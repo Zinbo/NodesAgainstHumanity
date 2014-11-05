@@ -1,4 +1,6 @@
 
+//This triggers when the last card has been loaded so that the height of the card can be set to the width
+// (since HTML has no real concept of height)
 angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 	return function(scope, element, attrs) {
 		if (scope.$last) setTimeout(function(){
@@ -8,8 +10,10 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 })
 .controller('MainController', function($scope, $http, CardFactory, ExpansionFactory) {
 
+	//Redundant really, but showing how things defined in the scope can be used in the view.
     $scope.tagline = 'Remembering famous PVG quotes since 2014';   
 
+	//Set the height of the cards to be the inner width.
 	$scope.$on('onRepeatLast', function(scope, element, attrs){
         $( ".black-card" ).each(function(){
 			$( this ).height($( this ).innerWidth());
