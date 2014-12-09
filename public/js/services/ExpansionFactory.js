@@ -5,6 +5,10 @@ angular.module('DeckBuilderApp').factory('ExpansionFactory', ['$http', function(
 			return $http.get('/api/expansions');
 		},
 		
+		get : function(id) {
+			return $http.get('/api/expansion/' + id);
+		},
+		
 		create : function(expansionData) {
 			return $http.post('/api/expansions', expansionData);
 		},

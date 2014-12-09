@@ -9,109 +9,78 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 		};
 })
 .controller('MainController', function($scope, $http, CardFactory, ExpansionFactory) {
-
 	//Redundant really, but showing how things defined in the scope can be used in the view.
     $scope.tagline = 'Remembering famous PVG quotes since 2014';   
 
 	//Set the height of the cards to be the inner width.
 	$scope.$on('onRepeatLast', function(scope, element, attrs){
-        $( ".black-card" ).each(function(){
-			$( this ).height($( this ).innerWidth());
-		});
-		
-		$( ".white-card" ).each(function(){
+        $( ".card" ).each(function(){
 			$( this ).height($( this ).innerWidth());
 		});
       });
 	
-	$scope.formatExpansions = function()
-	{
+	var addDescription = function(expandedCard) {
+		return function(data) {
+			expandedCard.description = data.description;
+			
+		};
+	};
+	
+	
+	function setupCardArray(cards) {
+				
+		//We separate cards into groups of 6 so they are rendered in rows of 6.
+		var noOfCardSegments = Math.ceil(cards.length / 6);		
+		var expandedCards = new Array(noOfCardSegments);
+		for(var i = 0; i < noOfCardSegments; i++){
+			// if we're not on the last segment, then set the array size to 6
+			if(i < noOfCardSegments -1) {
+				expandedCards[i] = new Array(6);
+			}
+			//Else set to the number of cards left that don't divide by 6
+			else {
+				expandedCards[i] = new Array(cards.length % 6);
+			}
+		}
+		
+		var cardArrayIndex = 0;
+		var cardIndex = 0;
+		
+		for(var i = 0; i < cards.length; i++) {
+			var cardId = cards[i];
+			expandedCards[cardArrayIndex][cardIndex] = new Object();
+			expandedCards[cardArrayIndex][cardIndex].id = cardId;
+				
+			if(++cardIndex == 6) {
+				cardIndex = 0;
+				cardArrayIndex++;
+			}
+		}
+		
+		return expandedCards;
+		
+	};			
+			
+	$scope.formatExpansions = function() {
 		for(var j = 0; j < $scope.expansions.length; j++){
 			var expansion = $scope.expansions[j];
-			var cardIndex = 0;
-			var cardArrayIndex = 0;
-			
-			//We separate cards into groups of 6 so they are rendered in rows of 6.
-			var noOfWhiteCardSegments = Math.ceil(expansion.whiteCards.length / 6);		
-			var expandedWhiteCards = new Array(noOfWhiteCardSegments);
-			for(var i = 0; i < noOfWhiteCardSegments; i++){
-				// if we're not on the last segment, then set the array size to 6
-				if(i < noOfWhiteCardSegments -1) {
-					expandedWhiteCards[i] = new Array(6);
-				}
-				//Else set to the odd number of cards left that don't divide by 6
-				else {
-					expandedWhiteCards[i] = new Array(expansion.whiteCards.length % 6);
+		
+			expansion.whiteCards = setupCardArray(expansion.whiteCards);
+			expansion.blackCards = setupCardArray(expansion.blackCards);
+
+			for(var i = 0; i < expansion.whiteCards.length; i++){
+				var whiteCardSubset = expansion.whiteCards[i];
+				for(var k = 0; k < whiteCardSubset.length; k++) {
+						CardFactory.get(whiteCardSubset[k].id).success(addDescription(expansion.whiteCards[i][k]));
 				}
 			}
 			
-			for(var i = 0; i < expansion.whiteCards.length; i++) {
-				var whiteCardIndex = expansion.whiteCards[i];
-				expandedWhiteCards[cardArrayIndex][cardIndex] = new Object();
-				expandedWhiteCards[cardArrayIndex][cardIndex].id = whiteCardIndex;
-				
-				var addDescription = function(expandedWhiteCard) {
-					return function(data) {
-						expandedWhiteCard.description = data.description;
-					};
-				};
-				
-				$http.get('/api/card/' + whiteCardIndex)
-					.success(addDescription(expandedWhiteCards[cardArrayIndex][cardIndex]));
-					
-				if(++cardIndex == 6) {
-					cardIndex = 0;
-					cardArrayIndex++;
+			for(var i = 0; i < expansion.blackCards.length; i++){
+				var blackCardSubset = expansion.blackCards[i];
+				for(var k = 0; k < blackCardSubset.length; k++) {
+						CardFactory.get(blackCardSubset[k].id).success(addDescription(expansion.blackCards[i][k]));
 				}
 			}
-			
-			expansion.whiteCards = expandedWhiteCards;
-			
-			//Do the same for black cards
-			cardIndex = 0;
-			cardArrayIndex = 0;
-			
-			var noOfBlackCardSegments = Math.ceil(expansion.blackCards.length / 6);		
-			var expandedBlackCards = new Array(noOfBlackCardSegments);
-			for(var i = 0; i < noOfBlackCardSegments; i++){
-				// if we're not on the last segment, then set the array size to 6
-				if(i < noOfBlackCardSegments -1) {
-					expandedBlackCards[i] = new Array(6);
-				}
-				//Else set to the odd number of cards left that don't divide by 6
-				else {
-					expandedBlackCards[i] = new Array(expansion.blackCards.length % 6);
-				}
-			}
-			
-			for(var i = 0; i < expansion.blackCards.length; i++) {
-				var blackCardIndex = expansion.blackCards[i];
-				expandedBlackCards[cardArrayIndex][cardIndex] = new Object();
-				expandedBlackCards[cardArrayIndex][cardIndex].id = blackCardIndex;
-				
-				/*
-				$http.get('/api/card/' + blackCardIndex)
-					.success(function(data, cardIndex, cardArrayIndex) {
-						
-					});
-				*/
-				
-				var addDescription = function(expandedBlackCard) {
-					return function(data) {
-						expandedBlackCard.description = data.description;
-					};
-				};
-				
-				$http.get('/api/card/' + blackCardIndex)
-					.success(addDescription(expandedBlackCards[cardArrayIndex][cardIndex]));
-					
-				if(++cardIndex == 6) {
-					cardIndex = 0;
-					cardArrayIndex++;
-				}
-			}
-			
-			expansion.blackCards = expandedBlackCards;
 		}
 	}
 	
@@ -129,7 +98,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 		});
 	
 	$scope.createExpansion = function() {
-		$http.post('/api/expansions', $scope.formExpansionData)
+		ExpansionFactory.create($scope.formExpansionData)
 			.success( function(data) {
 				$scope.formExpansionData = {}; // clear the form so our user is ready to enter another
 				$scope.expansions = data;
@@ -172,7 +141,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 
 		if(formIsValid)
 		{
-			$http.post('/api/cards', $scope.formCardData)
+			CardFactory.get($scope.formCardData)
 				.success(function(data) {
 					$scope.formCardData = {}; // clear the form so our user is ready to enter another
 					$scope.expansions = data;
@@ -182,14 +151,14 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 					console.log('Error: ' + data);
 				});
 		
-			$('#cardModal').modal('hide');
-		}
+				$('#cardModal').modal('hide');
+			}
 
 		};
 	
 	$scope.editExpansion = function() {
 		$scope.formUpdateExpansionData.id = $("#expansionEditModal").attr("expansion-id");
-		$http.put('/api/expansions/', $scope.formUpdateExpansionData)
+		ExpansionFactory.create($scope.formUpdateExpansionData)
 			.success(function(data) {
 				$scope.formUpdateExpansionData = {}; // clear the form so our user is ready to enter another
 				$scope.expansions = data;
@@ -199,7 +168,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 	
 	$scope.deleteExpansion = function() {
 		var id = $("#expansionEditModal").attr("expansion-id");
-		$http.delete('/api/expansion/' + id)
+		ExpansionFactory.delete(id)
 			.success(function(data) {
 				$scope.formUpdateExpansionData = {};
 				$scope.expansions = data;
@@ -254,7 +223,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 		
 		if(formIsValid)
 		{
-			$http.put('/api/cards/', $scope.formEditCardData)
+			CardFactory.create($scope.formEditCardData)
 				.success(function(data) {
 					$scope.formEditCardData = {}; // clear the form so our user is ready to enter another
 					$scope.expansions = data;
@@ -266,7 +235,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 	
 	$scope.deleteCard = function() {
 		var id = $("#cardEditModal").attr("card-id");
-		$http.delete('/api/card/' + id)
+		CardFactory.delete(id)
 				.success(function(data) {
 					$scope.formEditCardData = {}; // clear the form so our user is ready to enter another
 					$scope.expansions = data;
@@ -277,7 +246,7 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 	
 	$scope.OpenEditCardDialog = function(id) {
 		$("#cardEditModal").attr("card-id", id);
-		$http.get('/api/card/' + id)
+		CardFactory.get(id)
 			.success(function(data){
 				$("#edit-card-description").val(data.description);
 				$("#is-white-checkbox-edit").prop('checked', data.isWhite);
@@ -312,9 +281,8 @@ angular.module('DeckBuilderApp').directive('stylingDirective', function() {
 	
 	$scope.OpenEditExpansionDialog = function(id) {
 		$("#expansionEditModal").attr("expansion-id", id);
-		$http.get('/api/expansion/' + id)
-			.success(function(data)
-			{	
+		ExpansionFactory.get(id)
+			.success(function(data){	
 				$('#edit-expansion-name').val(data.name);
 				$('#expansionEditModal').attr('expansion-id', id);
 				$('#expansionEditModal').modal('show');
